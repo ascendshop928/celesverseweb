@@ -1,26 +1,89 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200;300;400;500;600&family=Inter:wght@300;400;500&display=swap');
 @import "tailwindcss";
 
+/* === Silk & Shadow 色彩系統（HSL tokens） === */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: hsl(45 30% 97%);
+  --foreground: hsl(155 40% 18%);
+  --pearl: hsl(45 30% 97%);
+  --mist: hsl(150 12% 93%);
+  --gold-dust: hsl(42 72% 52%);
+  --dusk: hsl(155 40% 18%);
+  --moss: hsl(155 30% 30%);
+  --border: hsl(45 15% 88%);
+  --muted-fg: hsl(155 15% 42%);
+  --destructive: hsl(0 84% 60%);
+
+  --shadow-soft: 0 25px 60px -15px hsl(155 40% 18% / 0.06);
+  --shadow-glow: 0 0 120px 40px hsl(42 72% 52% / 0.15);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-pearl: var(--pearl);
+  --color-mist: var(--mist);
+  --color-gold-dust: var(--gold-dust);
+  --color-dusk: var(--dusk);
+  --color-moss: var(--moss);
+  --color-border: var(--border);
+  --color-muted-fg: var(--muted-fg);
+  --color-destructive: var(--destructive);
+  --font-serif: 'Noto Serif SC', serif;
+  --font-sans: 'Inter', sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* === 基礎樣式 === */
+* {
+  border-color: var(--border);
 }
 
 body {
-  background: var(--background);
+  background: var(--mist);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Noto Serif SC', serif;
+}
+
+::selection {
+  background: hsl(42 72% 52% / 0.2);
+}
+
+/* === 工具類 === */
+.writing-vertical {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+}
+
+/* === 動畫 === */
+@keyframes float-up {
+  0% { opacity: 0; transform: translateY(30px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes gentle-pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+.animate-float-up {
+  animation: float-up 1s ease-out forwards;
+}
+
+.animate-float-up-delay {
+  animation: float-up 1s ease-out 0.2s forwards;
+  opacity: 0;
+}
+
+.animate-float-up-delay-2 {
+  animation: float-up 1s ease-out 0.4s forwards;
+  opacity: 0;
+}
+
+.animate-gentle-pulse {
+  animation: gentle-pulse 3s ease-in-out infinite;
 }

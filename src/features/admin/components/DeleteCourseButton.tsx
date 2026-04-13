@@ -1,0 +1,30 @@
+// 課程刪除按鈕（含確認）
+"use client";
+
+import { deleteCourse } from "@/features/admin/actions/course.action";
+import { useTransition } from "react";
+
+export function DeleteCourseButton({
+  courseId,
+  courseName,
+}: {
+  courseId: string;
+  courseName: string;
+}) {
+  const [isPending, startTransition] = useTransition();
+
+  function handleDelete() {
+    if (!confirm(`確定要刪除「${courseName}」嗎？此操作無法復原。`)) return;
+    startTransition(() => deleteCourse(courseId));
+  }
+
+  return (
+    <button
+      disabled={isPending}
+      onClick={handleDelete}
+      className="rounded px-2 py-1 text-xs text-red-500 hover:bg-red-50 transition-colors disabled:opacity-50"
+    >
+      {isPending ? "..." : "刪除"}
+    </button>
+  );
+}

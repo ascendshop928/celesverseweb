@@ -1,36 +1,53 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CelesVerse - 身心靈課程網站
 
-## Getting Started
+身心靈課程電商平台，提供課程瀏覽、線上購買、即時庫存顯示與管理後台。
 
-First, run the development server:
+## 功能
+
+- 課程商品頁 — 瀏覽課程、查看詳情、即時庫存顯示
+- 線上購買 — 填寫資料、下單購買、訂單確認
+- 管理後台 — 課程上下架、編輯商品資訊、訂單管理
+
+## 技術棧
+
+- **前端框架**：Next.js (App Router) + TypeScript
+- **樣式**：Tailwind CSS
+- **資料庫**：PostgreSQL + Prisma ORM
+- **部署**：Vercel（推薦）
+
+## 安裝與啟動
 
 ```bash
+# 1. 安裝依賴
+npm install
+
+# 2. 設定環境變數
+cp .env.example .env
+# 編輯 .env 填入你的資料庫連線資訊
+
+# 3. 啟動本地 Prisma Postgres 並同步 schema
+npx prisma dev
+
+# 4. 啟動開發伺服器
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+開啟 http://localhost:3000 即可瀏覽。
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 專案結構
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+src/
+├── app/                  # Next.js 路由與頁面
+├── features/             # 按功能分的模組
+│   ├── courses/          # 課程瀏覽與詳情
+│   ├── orders/           # 購買流程與訂單
+│   ├── inventory/        # 庫存管理邏輯
+│   └── admin/            # 管理後台
+├── components/           # 共用元件
+│   ├── ui/               # 基礎 UI 元件
+│   └── layout/           # 版面元件
+├── lib/                  # 工具函式與第三方整合
+├── config/               # 設定常數
+└── types/                # 共用型別定義
+```

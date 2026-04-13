@@ -1,0 +1,159 @@
+// 身心靈課程電商網站 - 資料庫模型定義
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// 課程模板（可重複使用的課程定義）
+model CourseTemplate {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  content     String?  // 課程詳細內容
+  categoryId  String?
+  category    Category? @relation(fields: [categoryId], references: [id])
+  isArchived  Boolean  @default(false) // 是否封存
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  images  CourseTemplateImage[]
+  courses Course[]
+
+  @@index([categoryId])
+}
+
+// 課程模板圖片
+model CourseTemplateImage {
+  id         String @id @default(cuid())
+  url        String
+  sortOrder  Int    @default(0)
+  templateId String
+  template   CourseTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+
+  @@index([templateId])
+}
+
+// 課程排程（由模板建立的實際開課）
+model Course {
+  id          String   @id @default(cuid())
+  templateId  String
+  template    CourseTemplate @relation(fields: [templateId], references: [id])
+  price       Int      // 價格（新台幣元）
+  teacherId   String?
+  teacher     Teacher?  @relation(fields: [teacherId], references: [id])
+  totalSlots  Int      // 總名額
+  soldCount   Int      @default(0) // 已售數量
+  isPublished Boolean  @default(false) // 是否上架
+  startDate   DateTime? // 課程開始日期
+  endDate       DateTime? // 課程結束日期
+  isPostponed   Boolean  @default(false) // 是否延期
+  postponedTo   DateTime? // 延期到的新日期
+  postponedNote String?   // 延期備註
+  location      String?   // 上課地點
+  paymentLink   String?   // 付款連結
+  calendarColor String?   // 行事曆自訂顏色
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  orders OrderItem[]
+
+  @@index([isPublished])
+  @@index([templateId])
+  @@index([teacherId])
+}
+
+// 課程分類
+model Category {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  sortOrder Int      @default(0)
+  templates CourseTemplate[]
+}
+
+// 導師
+model Teacher {
+  id        String   @id @default(cuid())
+  name      String
+  title     String?
+  bio       String?
+  fullBio   String?
+  quote     String?
+  photo     String?
+  instagram String?
+  facebook  String?
+  website   String?
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  courses   Course[]
+}
+
+// 首頁內容設定
+model SiteContent {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String
+  updatedAt DateTime @updatedAt
+}
+
+// 訂單
+model Order {
+  id         String      @id @default(cuid())
+  buyerName  String
+  buyerEmail String
+  buyerPhone String?
+  totalPrice     Int
+  paymentStatus  PaymentStatus @default(PENDING)
+  orderStatus    OrderStatus   @default(CONFIRMED)
+  note           String?
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+
+  items OrderItem[]
+
+  @@index([paymentStatus])
+  @@index([orderStatus])
+  @@index([buyerEmail])
+}
+
+// 訂單項目
+model OrderItem {
+  id       String @id @default(cuid())
+  quantity Int    @default(1)
+  price    Int
+
+  orderId  String
+  order    Order  @relation(fields: [orderId], references: [id])
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id])
+
+  @@index([orderId])
+  @@index([courseId])
+}
+
+// 管理員帳號
+model Admin {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  createdAt DateTime @default(now())
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  REFUNDED
+}
+
+enum OrderStatus {
+  CONFIRMED
+  PREPARING
+  COMPLETED
+  CANCELLED
+}
