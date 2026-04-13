@@ -37,6 +37,21 @@ npm run lint         # ESLint 檢查
 - 價格以整數（新台幣元）儲存，不使用浮點數
 - 庫存計算：剩餘名額 = totalSlots - soldCount，購買時需檢查
 
+## 部署環境
+- Vercel（Function Region: sin1 新加坡）
+- Neon PostgreSQL（Singapore）
+- Vercel Blob（圖片儲存）
+
+## 必要環境變數
+- `DATABASE_URL` — Neon PostgreSQL 連線字串
+- `ADMIN_JWT_SECRET` — 管理員 JWT 簽名密鑰
+- `BLOB_READ_WRITE_TOKEN` — Vercel Blob 存取 token
+
+## 圖片上傳流程
+- 客戶端先壓縮（src/lib/upload.ts），超過 3.5MB 自動縮圖 + 降品質
+- Server API 上傳到 Vercel Blob（非本地檔案系統）
+- 上限 4MB（Vercel serverless body limit）
+
 ## 注意事項
 - `.env` 不可提交到 git，參考 `.env.example` 建立
 - Prisma Client 生成在 `src/generated/prisma/`，已加入 .gitignore
